@@ -1,4 +1,4 @@
-module mysqld_exporter
+module github.com/chatmoo/mysqld_exporter
 
 go 1.16
 
