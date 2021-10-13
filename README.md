@@ -142,15 +142,6 @@ docker run -d \
   prom/mysqld-exporter
 ```
 
-## heartbeat
-
-With `collect.heartbeat` enabled, mysqld_exporter will scrape replication delay
-measured by heartbeat mechanisms. [Pt-heartbeat][pth] is the
-reference heartbeat implementation supported.
-
-[pth]:https://www.percona.com/doc/percona-toolkit/2.2/pt-heartbeat.html
-
-
 ## Filtering enabled collectors
 
 The `mysqld_exporter` will expose all metrics from enabled collectors by default. This is the recommended way to collect metrics to avoid errors when comparing metrics of different families.
