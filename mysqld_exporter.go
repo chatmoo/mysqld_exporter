@@ -19,13 +19,14 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io/ioutil"
-	"mysqld_exporter/collector"
 	"net/http"
 	"os"
 	"path"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/chatmoo/mysqld_exporter/collector"
 
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
