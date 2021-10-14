@@ -37,6 +37,11 @@ var globalStatusRE = regexp.MustCompile(`^(com|handler|connection_errors|innodb_
 
 // Metric descriptors.
 var (
+	globalCommandsDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, globalStatus, "commands_total"),
+		"Total number of executed MySQL commands.",
+		[]string{"command"}, nil,
+	)
 	globalHandlerDesc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, globalStatus, "handlers_total"),
 		"Total number of executed MySQL handlers.",
@@ -114,6 +119,15 @@ func (ScrapeGlobalStatus) Scrape(ctx context.Context, db *sql.DB, ch chan<- prom
 				continue
 			}
 			switch match[1] {
+			case "com":
+				switch match[2] {
+				case "begin", "commit", "rollback", "create_trigger", "create_view", "group_replication_start", "group_replication_stop":
+					ch <- prometheus.MustNewConstMetric(
+						globalCommandsDesc, prometheus.CounterValue, floatVal, match[2],
+					)
+				default:
+					continue
+				}
 			case "handler":
 				ch <- prometheus.MustNewConstMetric(
 					globalHandlerDesc, prometheus.CounterValue, floatVal, match[2],
@@ -143,8 +157,6 @@ func (ScrapeGlobalStatus) Scrape(ctx context.Context, db *sql.DB, ch chan<- prom
 				ch <- prometheus.MustNewConstMetric(
 					globalInnoDBRowOpsDesc, prometheus.CounterValue, floatVal, match[2],
 				)
-			case "com":
-				continue
 			case "ssl":
 				continue
 			case "mysqlx":
